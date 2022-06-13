@@ -14,6 +14,9 @@ import {  useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { getToken } from "../services/LocalStorageService";
 const Home = () => {
+
+  const [searchvalue, setSearchvalue] = useState("")
+
   const usertype = useSelector((state) => state.user);
   console.log("bhai sahab", usertype);
   const [vehicle, setVehicle] = useState([]);
@@ -62,15 +65,31 @@ const Home = () => {
           Add New Vehicle
         </Button>
       )}
+      <div style={{textAlign:'right'}}>
 
+      <input type='text'
+      placeholder="Search by name..."
+      onChange={(e)=>{
+        setSearchvalue(e.target.value)
+      }} />
+      </div>
+      
       <hr />
 
       <Grid container justifyContent="center">
-        {vehicle.map((v) => {
-          return (
+        {vehicle.filter((v)=>{
+          if (searchvalue===""){
+            return v
+          }
+          else if (v.vehicle_name.toLowerCase().includes(searchvalue.toLowerCase())){
+            return v            
+          }
+          return false
+        }).map((v,id) => {
+            return (
             <>
-              <Grid item sm={10} md={4} lg={4}>
-                <Card sx={{ maxWidth: 345 }} key={v.id}>
+              <Grid item sm={10} md={4} lg={4} key={id}>
+                <Card sx={{ maxWidth: 345 }} key={id}>
                   <CardActionArea>
                     <CardMedia
                       component="img"
@@ -80,8 +99,10 @@ const Home = () => {
                     />
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="div">
-                        {v.vehicle_model}
-                        ID: {v.id}
+                        Model: {v.vehicle_model}
+                      </Typography>
+                      <Typography gutterBottom variant="h5" component="div">
+                        Name: {v.vehicle_name}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
                         Year: {v.vehicle_year}

@@ -1,3 +1,4 @@
+import { Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
@@ -30,6 +31,8 @@ function UpdateManager() {
     }
   }, [data, isSuccess]);
 
+  const [server_error, setServerError] = useState({});
+
   const updateUserProfile = async () => {
     let formField = new FormData();
 
@@ -44,17 +47,21 @@ function UpdateManager() {
       method: "PUT",
       url: `http://127.0.0.1:8000/api/update/${id}`,
       data: formField,
-    }).then((response) => {
-      console.log(response.data);
-      navigate("/dashboard");
-    });
+    })
+      .then((response) => {
+        console.log(response.data);
+        navigate("/dashboard");
+      })
+      .catch((error) => {
+        console.log(error);
+        setServerError(error.response.data);
+      });
   };
 
   return (
     <div className="container">
       <div className="w-75 mx-auto shadow p-5">
         <h2 className="text-center mb-4">Update Manager</h2>
-
         <div className="form-group">
           <img src={profile_image} height="100" width="200" alt="" srcSet="" />
           <label>Upload Image</label>
@@ -64,7 +71,13 @@ function UpdateManager() {
             onChange={(e) => setProfile_image(e.target.files[0])}
           />
         </div>
-
+        {server_error.profile_image ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.profile_image[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <div className="form-group">
           <input
             type="text"
@@ -76,7 +89,13 @@ function UpdateManager() {
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
-
+        {server_error.username ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.username[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <div className="form-group">
           <input
             type="email"
@@ -87,6 +106,13 @@ function UpdateManager() {
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
+        {server_error.email ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.email[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <div className="form-group">
           <input
             type="text"
@@ -96,7 +122,14 @@ function UpdateManager() {
             value={first_name}
             onChange={(e) => setFirst_name(e.target.value)}
           />
-        </div>
+        </div>{" "}
+        {server_error.first_name ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.first_name[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <div className="form-group">
           <input
             type="text"
@@ -106,7 +139,14 @@ function UpdateManager() {
             value={last_name}
             onChange={(e) => setLast_name(e.target.value)}
           />
-        </div>
+        </div>{" "}
+        {server_error.last_name ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.last_name[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <div class="form-group">
           <input
             class="form-control"
@@ -117,7 +157,14 @@ function UpdateManager() {
             placeholder="MM/DD/YYY"
             type="date"
           />
-        </div>
+        </div>{" "}
+        {server_error.dob ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.dob[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <button
           onClick={updateUserProfile}
           className="btn btn-primary btn-block"

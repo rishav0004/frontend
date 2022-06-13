@@ -18,6 +18,7 @@ function Driver() {
   const usertype = useSelector((state) => state.user);
   const {access_token} = getToken()
   const navigate = useNavigate();
+  const [searchvalue, setSearchvalue] = useState("")
 
   const [driver, setDriver] = useState([]);
   function getData() {
@@ -67,12 +68,28 @@ function Driver() {
           Add New Driver
         </Button>
       )}
+      <div style={{textAlign:'right'}}>
+
+      <input type='text'
+      placeholder="Search by name..."
+      onChange={(e)=>{
+        setSearchvalue(e.target.value)
+      }} />
+      </div>
       <Grid container justifyContent="center">
-        {driver.map((d) => {
+        {driver.filter((d)=>{
+          if (searchvalue===""){
+            return d
+          }
+          else if (d.username.toLowerCase().includes(searchvalue.toLowerCase())){
+            return d            
+          }
+          return false
+        }).map((d,key) => {
           return (
             <>
-              <Grid item sm={10} md={4} lg={4}>
-                <Card sx={{ maxWidth: 345 }} key={d.id}>
+              <Grid item sm={10} md={4} lg={4} key={key}>
+                <Card sx={{ maxWidth: 345 }} key={key}>
                   <CardActionArea>
                     <CardMedia
                       component="img"

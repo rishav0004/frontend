@@ -20,6 +20,9 @@ function Manager() {
   const navigate = useNavigate();
   const {access_token} = getToken()
 
+
+  const [searchvalue, setSearchvalue] = useState("")
+
   function getData() {
     axios({
       method: "GET",
@@ -61,9 +64,25 @@ function Manager() {
           Add New Manager
         </Button>
       )}
+      <div style={{textAlign:'right'}}>
+
+      <input type='text'
+      placeholder="Search by name..."
+      onChange={(e)=>{
+        setSearchvalue(e.target.value)
+      }} />
+      </div>
       <hr />
       <Grid container justifyContent="center" cols={3}>
-        {manager.map((d) => {
+        {manager.filter((d)=>{
+          if (searchvalue===""){
+            return d
+          }
+          else if (d.user.username.toLowerCase().includes(searchvalue.toLowerCase())){
+            return d            
+          }
+          return false
+        }).map((d) => {
           return (
             <>
               <Grid item sm={10} md={4}>

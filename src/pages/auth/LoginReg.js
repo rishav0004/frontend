@@ -20,7 +20,7 @@ const LoginReg = () => {
     <>
       <Grid item lg={5} sm={7} xs={12}>
         <Card sx={{ width: "100%", height: "100%" }}>
-          <Box sx={{ mx: 3, height: 530 }}>
+          <Box sx={{ mx: 3, height: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
               <Tabs
                 value={value}

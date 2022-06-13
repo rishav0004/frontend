@@ -1,17 +1,18 @@
 import axios from "axios";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { getToken } from "../../services/LocalStorageService";
 import { useNavigate, useParams } from "react-router-dom";
 import { useGetVehicleByIdQuery } from "../../services/userAuthApi";
+import { Typography } from "@mui/material";
 
 function UpdateVehicle() {
   const { access_token } = getToken();
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const {data , isSuccess} = useGetVehicleByIdQuery(id)
+  const { data, isSuccess } = useGetVehicleByIdQuery(id);
   console.log(data);
-  
+
   // const [veh, setVeh] = useState({
   //   vehicle_name: "",
   //   vehicle_model: "",
@@ -21,37 +22,25 @@ function UpdateVehicle() {
   //   registration_number: "",
   // });
 
-  const [vehicle_name, setVehicle_name] = useState('');
-  const [vehicle_model, setVehicle_model] = useState('');
-  const [vehicle_year, setVehicle_year] = useState('');
-  const [vehicle_photo, setVehicle_photo] = useState('');
-  const [chassi_number, setChassi_number] = useState('');
-  const [registration_number, setRegistration_number] = useState('');
+  const [vehicle_name, setVehicle_name] = useState("");
+  const [vehicle_model, setVehicle_model] = useState("");
+  const [vehicle_year, setVehicle_year] = useState("");
+  const [vehicle_photo, setVehicle_photo] = useState("");
+  const [chassi_number, setChassi_number] = useState("");
+  const [registration_number, setRegistration_number] = useState("");
 
-  useEffect(()=> {
+  useEffect(() => {
     if (data && isSuccess) {
-      setVehicle_name(data.vehicle_name)
-      setVehicle_model(data.vehicle_model)
-      setVehicle_year(data.vehicle_year)
-      setVehicle_photo(data.vehicle_photo)
-      setChassi_number(data.chassi_number)
-      setRegistration_number(data.registration_number)
+      setVehicle_name(data.vehicle_name);
+      setVehicle_model(data.vehicle_model);
+      setVehicle_year(data.vehicle_year);
+      setVehicle_photo(data.vehicle_photo);
+      setChassi_number(data.chassi_number);
+      setRegistration_number(data.registration_number);
     }
-  }, [data, isSuccess])
-  // useEffect(() => {
-  //   async function getVehicle() {
-  //     try {
-  //       const veh = await axios.get(`http://127.0.0.1:8000/api/vehicles/${id}/`)
-  //       setVeh(veh.data)
-  //     } catch (error) {
-  //   console.log("Something is Wrong");
+  }, [data, isSuccess]);
 
-  //     }
-  //   }
-  //   getVehicle()
-    
-  // }, [id])
-  
+  const [server_error, setServerError] = useState({});
 
   const updateVehicle = async () => {
     let formField = new FormData();
@@ -72,6 +61,10 @@ function UpdateVehicle() {
       .then((response) => {
         console.log(response.data);
         navigate("/");
+      })
+      .catch((error) => {
+        console.log(error);
+        setServerError(error.response.data);
       });
   };
 
@@ -81,7 +74,13 @@ function UpdateVehicle() {
         <h2 className="text-center mb-4">Vehicle Registration</h2>
 
         <div className="form-group">
-          <img src={vehicle_photo} height="200" width="200" alt={vehicle_name} srcSet="" />
+          <img
+            src={vehicle_photo}
+            height="200"
+            width="200"
+            alt={vehicle_name}
+            srcSet=""
+          />
           <label>Upload Image</label>
           <input
             name="vehicle_photo"
@@ -90,7 +89,13 @@ function UpdateVehicle() {
             onChange={(e) => setVehicle_photo(e.target.files[0])}
           />
         </div>
-
+        {server_error.vehicle_photo ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.vehicle_photo[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <div className="form-group">
           <input
             type="text"
@@ -102,7 +107,13 @@ function UpdateVehicle() {
             onChange={(e) => setVehicle_name(e.target.value)}
           />
         </div>
-
+        {server_error.vehicle_name ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.vehicle_name[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <div className="form-group">
           <input
             type="text"
@@ -113,6 +124,13 @@ function UpdateVehicle() {
             onChange={(e) => setVehicle_model(e.target.value)}
           />
         </div>
+        {server_error.vehicle_model ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.vehicle_model[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <div className="form-group">
           <input
             type="text"
@@ -123,6 +141,13 @@ function UpdateVehicle() {
             onChange={(e) => setVehicle_year(e.target.value)}
           />
         </div>
+        {server_error.vehicle_year ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.vehicle_year[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <div className="form-group">
           <input
             type="text"
@@ -133,6 +158,13 @@ function UpdateVehicle() {
             onChange={(e) => setChassi_number(e.target.value)}
           />
         </div>
+        {server_error.chassi_number ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.chassi_number[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <div className="form-group">
           <input
             type="text"
@@ -143,6 +175,13 @@ function UpdateVehicle() {
             onChange={(e) => setRegistration_number(e.target.value)}
           />
         </div>
+        {server_error.registration_number ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.registration_number[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <button
           onClick={() => updateVehicle()}
           className="btn btn-primary btn-block"

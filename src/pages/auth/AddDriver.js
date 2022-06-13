@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
 import {
-    TextField,
-    FormControlLabel,
-    Checkbox,
-    Button,
-    Box,
-  } from "@mui/material";
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  Button,
+  Box,
+  Typography,
+} from "@mui/material";
 import DatePicker from "react-date-picker";
 import { getToken } from "../../services/LocalStorageService";
 import { useRegisterDriverMutation } from "../../services/userAuthApi";
@@ -14,17 +15,14 @@ import { useRegisterDriverMutation } from "../../services/userAuthApi";
 export default function AddDriver() {
   const [value, onChange] = useState(new Date());
   const navigate = useNavigate();
-  const { access_token } = getToken()
-  console.log('gettoken:',access_token);
-
-
+  const { access_token } = getToken();
+  const [server_error, setServerError] = useState({});
 
   const [registerDriver] = useRegisterDriverMutation();
 
+  //   const access_token = useSelector((state)=>state.auth)
 
-//   const access_token = useSelector((state)=>state.auth)
-
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const actualData = {
@@ -38,10 +36,10 @@ const handleSubmit = async (e) => {
       last_name: data.get("last_name"),
     };
 
-    const res = await registerDriver({actualData,access_token});
-    console.log(res)
+    const res = await registerDriver({ actualData, access_token });
     if (res.error) {
-      // setServerError(res.error.data.errors);
+      console.log(res.error.data);
+      setServerError(res.error.data);
     }
     if (res.data) {
       console.log(typeof res.data);
@@ -50,11 +48,12 @@ const handleSubmit = async (e) => {
     }
   };
 
-  return <div>
-    <h1>Driver Register</h1>
+  return (
+    <div>
+      <h1>Driver Register</h1>
       <Box
         component="form"
-        sx={{margin: 0,mt:0}}
+        sx={{ margin: 0, mt: 0 }}
         id="registration-form"
         onSubmit={handleSubmit}
       >
@@ -66,8 +65,13 @@ const handleSubmit = async (e) => {
           name="username"
           label="username"
         />
-        
-
+        {server_error.username ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.username[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <TextField
           // margin="normal"
           required
@@ -76,8 +80,13 @@ const handleSubmit = async (e) => {
           name="email"
           label="Email Address"
         />
-        
-
+        {server_error.email ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.email[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <TextField
           // margin="normal"
           required
@@ -97,7 +106,13 @@ const handleSubmit = async (e) => {
           label="Confirm Password"
           type="password"
         />
-        
+        {server_error.error ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.error}
+          </Typography>
+        ) : (
+          ""
+        )}
         <TextField
           // margin="normal"
           required
@@ -106,7 +121,13 @@ const handleSubmit = async (e) => {
           name="first_name"
           label="First name"
         />
-       
+        {server_error.first_name ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.first_name[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         <TextField
           // margin="normal"
           required
@@ -115,8 +136,13 @@ const handleSubmit = async (e) => {
           name="last_name"
           label="last_name"
         />
-        
-        
+        {server_error.last_name ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.last_name[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
         Date of Birth :
         <DatePicker
           onChange={onChange}
@@ -126,14 +152,26 @@ const handleSubmit = async (e) => {
           required
         />
         <br />
-        
-        
-        <br/>
+        {server_error.dob ? (
+          <Typography style={{ fontSize: 12, color: "red", paddingLeft: 10 }}>
+            {server_error.dob[0]}
+          </Typography>
+        ) : (
+          ""
+        )}
+        <br />
         <FormControlLabel
-          control={<Checkbox value={true} color="primary" name="is_driver" id="is_driver" />}
+          control={
+            <Checkbox
+          required
+              value={true}
+              color="primary"
+              name="is_driver"
+              id="is_driver"
+            />
+          }
           label="I agree to term and condition."
         />
-        
         <Box textAlign="center">
           <Button
             type="submit"
@@ -143,7 +181,7 @@ const handleSubmit = async (e) => {
             Join
           </Button>
         </Box>
-        
       </Box>
-  </div>;
+    </div>
+  );
 }

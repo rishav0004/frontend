@@ -28,7 +28,7 @@ const UserLogin = () => {
     const res = await loginUser(actualData);
     if (res.error) {
       // console.log(typeof (res.error.data.errors))
-      // console.log(res.error.data.errors)
+      console.log(res.error.data.errors)
       setServerError(res.error.data.errors);
     }
     if (res.data) {

@@ -17,7 +17,6 @@ import UpdateManager from "./pages/auth/UpdateManager";
 import UpdateDriverPersonal from "./pages/auth/UpdateDriverPersonal";
 import AssignVehicle from "./pages/AssignVehicle";
 import DriverAssignDriver from "./pages/auth/DriverAssignDriver";
-import UpdateDriver from "./pages/auth/UpdateDriver";
 function App() {
   const { access_token } = useSelector((state) => state.auth);
   const usertype = useSelector((state) => state.user);
@@ -31,17 +30,7 @@ function App() {
             <Route path="contact" element={<Contact />} />
             <Route path="driver" element={<DriverAssignDriver />} />
             <Route path="manager" element={<Manager />} />
-            <Route
-              path="update/driver/:id"
-              element={
-                usertype.is_head.toString() === "true" ||
-                usertype.is_manager.toString() === "true" ? (
-                  <UpdateDriver />
-                ) : (
-                  <h1>You Cannot assign Vehicle to the Driver</h1>
-                )
-              }
-            />
+           
             <Route
               path="assignVehicle/:id"
               element={

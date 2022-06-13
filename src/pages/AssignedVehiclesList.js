@@ -34,9 +34,7 @@ function AssignedVehiclesList() {
       });
   };
 
-  const handleUserInfoUpdate = (id) => {
-    navigate(`/update/driver/${id}`);
-  };
+ 
 
   useEffect(() => {
     function getData() {
@@ -60,11 +58,11 @@ function AssignedVehiclesList() {
       <h1 style={{ textAlign: "center" }}>Drivers with Assigned Vehicles</h1>
 
       <Grid container justifyContent="center">
-        {driver.map((d) => {
+        {driver.map((d,key) => {
           return (
             <>
-              <Grid item sm={10} md={4} lg={4}>
-                <Card sx={{ maxWidth: 345 }} key={d.id}>
+              <Grid item sm={10} md={4} lg={4} key={key}>
+                <Card sx={{ maxWidth: 345 }} >
                   <CardActionArea>
                     <CardMedia
                       component="img"
@@ -88,12 +86,7 @@ function AssignedVehiclesList() {
                     usertype.is_manager.toString() === "true") && (
                     <Button onClick={() => handleDelete(d.id)}>Delete</Button>
                   )}
-                  {(usertype.is_head.toString() === "true" ||
-                    usertype.is_manager.toString() === "true") && (
-                    <Button onClick={() => handleUserInfoUpdate(d.id)}>
-                      Update Info
-                    </Button>
-                  )}
+                  
                 </Card>
                 <br />
               </Grid>
